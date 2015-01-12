@@ -41,20 +41,55 @@ def usrun():
 				jchar = percent+toHex(xnumber)
 				nchar = nchar + jchar
 	kapt = 'Acquire::http::proxy "http://'
+	kapt1 = 'http_proxy="http://'
+	kapt2 = 'HTTP_PROXY="http://'
 	papt = '@proxy.smartosc.com:3128/";'
+	papt1 = '@proxy.smartosc.com:3128/"' 
 	print ("Checking proxy is set or not")
 	seachremove()
 	hostname = "proxy.smartosc.com"
 	response = os.system("ping -c 1 " + hostname)
 	#Set proxy for apt-get
 	if response == 0:
+		print ("set proxy for apt")
+		e = kapt+user+':'+nchar+papt
+		e1 = kapt1+user+':'+nchar+papt1+'\n'+kapt2+user+':'+nchar+papt1+'\n\n'
 		e = kapt+user+':'+nchar+papt+'\n'
 		print ("Writing to file")
 		files = open('/etc/apt/apt.conf', 'w')
 		files.write(e)
 		files.close()
+		
+		print ("Setting proxy into environment")
+		Lenvironment = list()
+		fenvironment = open('/etc/environment', 'r')
+		for line in fenvironment.readlines():
+			Lenvironment.append(line)
+		Lenvironment.insert(0,e1)
+		fenvironment.close()
+
+		fenvironment2 = open('/etc/environment', 'w')
+		for line in xrange(len(Lenvironment)):
+			fenvironment2.write(Lenvironment[line])
+		fenvironment2.close()
+		gsettings()
+		chromesettings()
+		firefoxsettings()
 	else:
 		print ("Nothing to change")
+	start = 1
+	while True:
+		if start != 1:        
+			do_run = raw_input('Restart computer to take effect? (y/n):')
+			if do_run == 'y':
+				os.system("shutdown -r 01")
+			elif do_run == 'n':
+				break
+			else: 
+				print ("Invalid input")
+				continue
+		if start == 1:
+			start = 0
 
 def seachremove():
 	files = '/etc/environment'
@@ -71,7 +106,7 @@ def seachremove():
 	fopen.writelines(fouput)
 	fopen.close()
 	
-def subprocess():
+def gsettings():
 	os.system("gsettings set org.gnome.system.proxy autoconfig-url 'http://wpad.smartosc.com/proxy.pac'")
 	os.system("gsettings set org.gnome.system.proxy mode 'auto'")	
 
