@@ -108,11 +108,35 @@ def chromesettings():
 		fopenchrome = open(fchrome, 'w')
 		fopenchrome.writelines(foutputchrome)
 		fopenchrome.close()
+		print ("Google Chrome is setting to Auto-detect proxy settings for this network")
+		print ("Done!")
 	else:
 		print ("Google Chrome is not installed, no proxy is set")
 	
+def firefoxsettings():
+	print ("############################\nChecking if Firefox is installed")
+	if os.path.isfile("/usr/share/applications/firefox.desktop"):
+		print ("Firefox is installed")
+		os.system("firefox -version")
+		print ("Setting proxy for firefox")
+		ffirefox = '/etc/firefox/syspref.js'
+		Lfirefox = list()
+		Ffirefox = open(ffirefox, 'r')
+		fvalue = 'pref("network.proxy.type", 4);\n'
+		for line in Ffirefox.readlines():
+			Lfirefox.append(line)
+		Lfirefox.insert(0,fvalue)
+		Ffirefox.close()
 
-	
+		Ffirefox2 = open(ffirefox, 'w')
+		for line in xrange(len(Lfirefox)):
+			Ffirefox2.write(Lfirefox[line])
+		Ffirefox2.close()
+		print ("Firefox Proxy is setting to Auto-detect proxy settings for this network")
+		print ("Done!")
+	else:
+		print ("Firefox is not installed on this machine, no proxy is set")
+		
 def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"hio")
@@ -128,4 +152,4 @@ def main(argv):
 if __name__ == "__main__":
 	main(sys.argv[1:])
 #usrun()
-chromesettings()
+firefoxsettings()
