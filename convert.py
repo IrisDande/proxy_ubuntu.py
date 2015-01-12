@@ -7,6 +7,7 @@ import getopt
 import shutil
 import fileinput
 import os.path
+import getpass
 
 def toHex(s):
     lst = []
@@ -24,8 +25,10 @@ def toStr(s):
 
 #############run as normal user#####
 def usrun():
-	line=sys.stdin.readline()[:-1]
-	[user,password]=line.split(' ')
+	#line=sys.stdin.readline()[:-1]
+	#[user,password]=line.split(' ')
+	user = raw_input("Username without @smartosc.com: ")
+	password = getpass.getpass('Password: ')
 	charactertohex = toHex(password)
 	listpass = list(password)
 	percent = "%"
