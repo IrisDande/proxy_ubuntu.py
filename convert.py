@@ -6,6 +6,8 @@ import os
 import getopt
 import shutil
 import fileinput
+import os.path
+
 def toHex(s):
     lst = []
     for ch in s:
@@ -77,10 +79,39 @@ def seachremove():
 		if not 'proxy.smartosc.com' in line:
 			fouput.append(line)
 			print ("Removing old proxy to set new one")
+		if not '\n' in line:
+			fouput.append(line)
 	fopen.close()
 	fopen = open(files, 'w')
 	fopen.writelines(fouput)
 	fopen.close()
+	
+def subprocess():
+	os.system("gsettings set org.gnome.system.proxy autoconfig-url 'http://wpad.smartosc.com/proxy.pac'")
+	os.system("gsettings set org.gnome.system.proxy mode 'auto'")	
+
+def chromesettings():
+	print ("############################\nChecking if Google Chrome is installed")
+	if os.path.isfile("/usr/share/applications/google-chrome.desktop"):
+		print ("Google Chrome is installed")
+		os.system("google-chrome --version")
+		print ("Setting proxy for Google Chrome")
+		fchrome = '/usr/share/applications/google-chrome.desktop'
+		fopenchrome = open(fchrome)
+		foutputchrome = []
+		for line in fopenchrome:
+			if not 'Exec' in line:
+				foutputchrome.append(line)
+			if 'Exec' in line:
+				foutputchrome.append(line.strip()+" --proxy-auto-detect" + "\n")
+		fopenchrome.close()
+		fopenchrome = open(fchrome, 'w')
+		fopenchrome.writelines(foutputchrome)
+		fopenchrome.close()
+	else:
+		print ("Google Chrome is not installed, no proxy is set")
+	
+
 	
 def main(argv):
 	try:
@@ -96,4 +127,5 @@ def main(argv):
 			usrun()
 if __name__ == "__main__":
 	main(sys.argv[1:])
-usrun()
+#usrun()
+chromesettings()
