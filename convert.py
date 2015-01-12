@@ -9,6 +9,7 @@ import fileinput
 import os.path
 import getpass
 
+
 def toHex(s):
     lst = []
     for ch in s:
@@ -162,7 +163,7 @@ def firefoxsettings():
 		print ("Done!")
 	else:
 		print ("Firefox is not installed on this machine, no proxy is set")
-		
+				
 def main(argv):
 	try:
 		opts, args = getopt.getopt(argv,"hio")
