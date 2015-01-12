@@ -23,10 +23,13 @@ def toHex(s):
 def toStr(s):
     return s and chr(atoi(s[:2], base=16)) + toStr(s[2:]) or ''
 
+def runasroot():
+	if os.geteuid() != 0:
+		os.execvp("sudo", ["sudo"] + sys.argv)
+
 #############run as normal user#####
 def usrun():
-	#line=sys.stdin.readline()[:-1]
-	#[user,password]=line.split(' ')
+	runasroot()
 	user = raw_input("Username without @smartosc.com: ")
 	password = getpass.getpass('Password: ')
 	charactertohex = toHex(password)
